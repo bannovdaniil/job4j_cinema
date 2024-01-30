@@ -14,9 +14,11 @@ import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+/**
+ * Конфиг для работы с базой данных
+ */
 @Configuration
 public class DatasourceConfiguration {
-
     @Bean
     public DataSource connectionPool(@Value("${datasource.url}") String url,
                                      @Value("${datasource.username}") String username,

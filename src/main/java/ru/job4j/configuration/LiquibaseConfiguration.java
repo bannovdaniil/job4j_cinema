@@ -8,6 +8,9 @@ import org.springframework.context.annotation.PropertySource;
 
 import javax.sql.DataSource;
 
+/**
+ * Конфиг для инициализации liquibase
+ */
 @Configuration
 @PropertySource(value = "classpath:db/liquibase.properties")
 public class LiquibaseConfiguration {

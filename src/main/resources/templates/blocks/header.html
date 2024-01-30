@@ -1,14 +1,14 @@
-<div th:fragment="header" class="container col-8">
+<div th:fragment="header" class="container col-9">
     <nav class="navbar navbar-expand-lg navbar-dark rounded-top" style="background-color: #0b2e13">
         <div class="navbar-header">
             <a href="/" class="navbar-brand"><img src="/img/icon.png?q" width="65" alt="logo"/>Cinema</a>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" th:href="@{/vacancies}">Расписание</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/vacancies}">Кинотека</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/films}">Кинотека</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/films}">Расписание</a></li>
             </ul>
-            <div class="my-2 my-lg-0" th:if="${user == null || user.name == 'Гость'}">
+            <div class="my-2 my-lg-0" th:if="${user == null || user.fullName == 'Гость'}">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/users/register}">Регистрация</a>
@@ -18,9 +18,9 @@
                     </li>
                 </ul>
             </div>
-            <div class="my-2 my-lg-0" th:if="${user != null && user.name != 'Гость'}">
+            <div class="my-2 my-lg-0" th:if="${user != null && user.fullName != 'Гость'}">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item text-white my-2" th:text="${user.name}"></li>
+                    <li class="nav-item text-white my-2" th:text="${user.fullName}"></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/users/logout}">Выйти</a></li>
                 </ul>
             </div>
