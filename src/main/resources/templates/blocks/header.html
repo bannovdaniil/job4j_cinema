@@ -6,7 +6,7 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item"><a class="nav-link" th:href="@{/films}">Кинотека</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/films}">Расписание</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/sessions}">Расписание</a></li>
             </ul>
             <div class="my-2 my-lg-0" th:if="${user == null || user.fullName == 'Гость'}">
                 <ul class="navbar-nav mr-auto">

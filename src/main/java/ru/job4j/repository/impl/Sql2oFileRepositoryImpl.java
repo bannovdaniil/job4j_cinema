@@ -1,6 +1,8 @@
 package ru.job4j.repository.impl;
 
 import org.springframework.stereotype.Repository;
+import org.sql2o.Connection;
+import org.sql2o.Query;
 import org.sql2o.Sql2o;
 import ru.job4j.model.File;
 import ru.job4j.repository.FileRepository;
@@ -21,8 +23,8 @@ public class Sql2oFileRepositoryImpl implements FileRepository {
 
     @Override
     public File save(File file) {
-        try (var connection = sql2o.open()) {
-            var query = connection.createQuery("INSERT INTO files (name, path) VALUES (:name, :path)", true)
+        try (Connection connection = sql2o.open()) {
+            Query query = connection.createQuery("INSERT INTO files (name, path) VALUES (:name, :path)", true)
                     .addParameter("name", file.getName())
                     .addParameter("path", file.getPath());
             int generatedId = query.executeUpdate().getKey(Integer.class);
@@ -33,17 +35,17 @@ public class Sql2oFileRepositoryImpl implements FileRepository {
 
     @Override
     public Optional<File> findById(int id) {
-        try (var connection = sql2o.open()) {
-            var query = connection.createQuery("SELECT * FROM files WHERE id = :id");
-            var file = query.addParameter("id", id).executeAndFetchFirst(File.class);
+        try (Connection connection = sql2o.open()) {
+            Query query = connection.createQuery("SELECT * FROM files WHERE id = :id");
+            File file = query.addParameter("id", id).executeAndFetchFirst(File.class);
             return Optional.ofNullable(file);
         }
     }
 
     @Override
     public void deleteById(int id) {
-        try (var connection = sql2o.open()) {
-            var query = connection.createQuery("DELETE FROM files WHERE id = :id");
+        try (Connection connection = sql2o.open()) {
+            Query query = connection.createQuery("DELETE FROM files WHERE id = :id");
             query.addParameter("id", id).executeUpdate();
         }
     }

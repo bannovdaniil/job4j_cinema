@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head th:replace="~{blocks/base_head :: baseHead(~{::title})}">
+    <title>Расписание</title>
+</head>
+<body>
+<div class="container-fluid p-0">
+    <header th:insert="~{blocks/header :: header}"></header>
+    <div class="container col-8">
+        <div class="mt-3">
+            <h3>Сеансы</h3>
+        </div>
+        <div class="row">
+            <table class="table  table-hover">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Фильм</th>
+                    <th scope="col">Зал</th>
+                    <th scope="col">Время начала</th>
+                    <th scope="col">Время окончания</th>
+                    <th scope="col">Цена</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="filmSession, item: ${filmSessions}">
+                    <th>
+                    <a th:text="${item.index + 1}"
+                       th:href="@{/sessions/{filmSessionId}(filmSessionId=${filmSession.id})}"></a>
+                    </th>
+                    <td><a href="#" class="nav-link" data-toggle="modal" data-target="#exampleModalCenter"
+                           th:text="${films[__${filmSession.filmId - 1}__].name}"></a></td>
+                    </td>
+                    <td th:text="${filmSession.hallsId}"/>
+                    <td th:text="${{filmSession.startTime}}"/>
+                    <td th:text="${{filmSession.endTime}}"/>
+                    <td><span th:text="${filmSession.price}"></span>
+                        <button type="button" class="mx-4 btn btn-success btn-sm w-50">Купить</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <footer th:insert="~{blocks/footer :: footer}"></footer>
+    <modalFilm th:insert="~{blocks/modalFilm :: modalFilm}"></modalFilm>
+</div>
+</body>
+</html>

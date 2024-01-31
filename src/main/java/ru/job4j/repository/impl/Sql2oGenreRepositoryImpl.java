@@ -1,6 +1,8 @@
 package ru.job4j.repository.impl;
 
 import org.springframework.stereotype.Repository;
+import org.sql2o.Connection;
+import org.sql2o.Query;
 import org.sql2o.Sql2o;
 import ru.job4j.model.Genre;
 import ru.job4j.repository.GenreRepository;
@@ -17,8 +19,8 @@ public class Sql2oGenreRepositoryImpl implements GenreRepository {
 
     @Override
     public Collection<Genre> findAll() {
-        try (var connection = sql2o.open()) {
-            var query = connection.createQuery("SELECT * FROM genres");
+        try (Connection connection = sql2o.open()) {
+            Query query = connection.createQuery("SELECT * FROM genres");
             return query.executeAndFetch(Genre.class);
         }
     }

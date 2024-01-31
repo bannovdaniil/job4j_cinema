@@ -3,6 +3,8 @@ package ru.job4j.repository.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.sql2o.Connection;
+import org.sql2o.Query;
 import org.sql2o.Sql2o;
 import ru.job4j.model.User;
 import ru.job4j.repository.UserRepository;
@@ -23,12 +25,12 @@ public class Sql2oUserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> save(User user) {
-        try (var connection = sql2o.open()) {
-            var sql = """
+        try (Connection connection = sql2o.open()) {
+            String sql = """
                     INSERT INTO users(full_name, email, password)
                     VALUES (:name, :email, :password)
                     """;
-            var query = connection.createQuery(sql, true)
+            Query query = connection.createQuery(sql, true)
                     .addParameter("name", user.getFullName())
                     .addParameter("email", user.getEmail())
                     .addParameter("password", user.getPassword());
@@ -43,12 +45,12 @@ public class Sql2oUserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> findByEmailAndPassword(String email, String password) {
-        try (var connection = sql2o.open()) {
+        try (Connection connection = sql2o.open()) {
             String sql = """
                        SELECT * FROM users
                         WHERE email = :email AND password = :password;
                     """;
-            var query = connection.createQuery(sql);
+            Query query = connection.createQuery(sql);
             query.addParameter("email", email);
             query.addParameter("password", password);
             User user = query.setColumnMappings(User.COLUMN_MAPPING).executeAndFetchFirst(User.class);

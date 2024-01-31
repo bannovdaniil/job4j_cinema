@@ -6,9 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.job4j.model.Film;
+import ru.job4j.model.FilmSession;
 import ru.job4j.service.FilmService;
-import ru.job4j.service.GenreService;
+import ru.job4j.service.FilmSessionService;
 
 import java.util.Optional;
 
@@ -17,15 +17,15 @@ import java.util.Optional;
  */
 @Controller
 @ThreadSafe
-@RequestMapping("/films")
-public class FilmController {
-    private static final String NOT_FOUND_FILM_MESSAGE = "Film ID not found.";
+@RequestMapping("/sessions")
+public class FilmSessionController {
+    private static final String NOT_FOUND_SESSION_MESSAGE = "Film Session not found.";
+    private final FilmSessionService filmSessionService;
     private final FilmService filmService;
-    private final GenreService genreService;
 
-    public FilmController(FilmService filmService, GenreService genreService) {
+    public FilmSessionController(FilmSessionService filmSessionService, FilmService filmService) {
+        this.filmSessionService = filmSessionService;
         this.filmService = filmService;
-        this.genreService = genreService;
     }
 
     private static String sendNotFoundError(Model model, String message) {
@@ -35,19 +35,18 @@ public class FilmController {
 
     @GetMapping
     public String getAll(Model model) {
+        model.addAttribute("filmSessions", filmSessionService.findAll());
         model.addAttribute("films", filmService.findAll());
-        model.addAttribute("genres", genreService.findAll());
-        return "films/list";
+        return "sessions/list";
     }
 
     @GetMapping("/{id}")
     public String getById(Model model, @PathVariable int id) {
-        Optional<Film> filmOptional = filmService.findById(id);
-        if (filmOptional.isEmpty()) {
-            return sendNotFoundError(model, NOT_FOUND_FILM_MESSAGE);
+        Optional<FilmSession> filmSessionOptional = filmSessionService.findById(id);
+        if (filmSessionOptional.isEmpty()) {
+            return sendNotFoundError(model, NOT_FOUND_SESSION_MESSAGE);
         }
-        model.addAttribute("film", filmOptional.get());
-        model.addAttribute("genres", genreService.findAll());
-        return "films/one";
+        model.addAttribute("filmSession", filmSessionOptional.get());
+        return "sessions/one";
     }
 }

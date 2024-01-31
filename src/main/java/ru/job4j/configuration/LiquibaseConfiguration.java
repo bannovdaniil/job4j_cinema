@@ -15,13 +15,12 @@ import javax.sql.DataSource;
 @PropertySource(value = "classpath:db/liquibase.properties")
 public class LiquibaseConfiguration {
     private final DataSource dataSource;
+    @Value("${changeLogFile}")
+    private String defaultLiquibaseChangelog;
 
     public LiquibaseConfiguration(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-
-    @Value("${changeLogFile}")
-    private String defaultLiquibaseChangelog;
 
     @Bean
     public SpringLiquibase liquibase() {

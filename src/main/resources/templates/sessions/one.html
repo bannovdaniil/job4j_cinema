@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head th:replace="~{blocks/base_head :: baseHead(~{::title})}">
+    <title>Фильм: </title>
+</head>
+<body>
+<div class="container-fluid p-0">
+    <header th:insert="~{blocks/header :: header}"></header>
+    <div class="container my-4">
+        <div th:object="${filmSession}">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <div class="mx-1 container">
+                        <div class="row">
+                            <h3 th:text="*{filmId}"></h3>
+                        </div>
+                        <div class="my-1 row">
+                            <span class="font-weight-bold">Зал:&nbsp;</span>
+                            <span th:text="*{hallsId}"/></span>
+                        </div>
+                        <div class="row">
+                            <span class="font-weight-bold">Жанр:&nbsp;</span>
+                            <span :text=""></span>
+                        </div>
+                        <div class="row">
+                            <span class="font-weight-bold">Ограничение по возрасту:&nbsp;</span>
+                            <span :text="*{price}"/></span>
+                        </div>
+                        <div class="row">
+                            <span class="font-weight-bold">Продолжительность:&nbsp;</span>
+                            <span h:text="${(film.durationInMinutes / 60) + ':' + (film.durationInMinutes % 60) + ':00'}"/></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer th:insert="~{blocks/footer :: footer}"></footer>
+</body>
+</html>
