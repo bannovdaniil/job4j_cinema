@@ -11,7 +11,7 @@
             <h3>Вакансии</h3>
         </div>
         <div class="row">
-            <table class="table">
+            <table class="table  table-hover">
                 <thead class="thead-light">
                 <tr>
                     <th scope="col">#</th>
@@ -29,7 +29,7 @@
                     <td th:text="${film.year}"/>
                     <td th:text="${genres[__${film.genreId - 1}__].name}"/>
                     <td th:text="${film.minimalAge}"/>
-                    <td th:text="${film.durationInMinutes}"/>
+                    <td th:text="${(film.durationInMinutes / 60) + ':' + (film.durationInMinutes % 60) + ':00'}" />
                 </tr>
                 </tbody>
             </table>
