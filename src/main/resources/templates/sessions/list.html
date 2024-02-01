@@ -23,17 +23,22 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="filmSession, item: ${filmSessions}">
-                    <th th:text="${item.index + 1}"></th>
-                    <td><a th:href="@{/films/__${filmSession.film.id}__}" class="nav-link" target="_blank"
-                           th:text="${filmSession.film.name}"></a></td>
+                <tr class="align-middle" th:each="filmSession, item: ${filmSessions}">
+                    <th class="align-middle" th:text="${item.index + 1}"></th>
+                    <td class="align-middle"><a th:href="@{/films/__${filmSession.film.id}__}" class="nav-link"
+                                                target="_blank"
+                                                th:text="${filmSession.film.name}"></a></td>
                     </td>
-                    <td th:text="${filmSession.hall.name}"/>
-                    <td th:text="${{filmSession.startTime}}"/>
-                    <td th:text="${{filmSession.endTime}}"/>
-                    <td><span th:text="${filmSession.price}"></span>
-                        <a th:href="@{/tickets/__${filmSession.id}__/order/}"
-                           class="mx-4 btn btn-success btn-sm w-50">Купить</a>
+                    <td class="align-middle" th:text="${filmSession.hall.name}"/>
+                    <td class="align-middle" th:text="${{filmSession.startTime}}"/>
+                    <td class="align-middle" th:text="${{filmSession.endTime}}"/>
+                    <td class="align-middle">
+                        <div class="d-flex">
+                            <span th:text="${filmSession.price}"></span>
+                            <span>
+                                <a th:href="@{/tickets/__${filmSession.id}__/order/}"
+                                   class="mx-4 btn btn-success btn-sm w-100">Купить</a></span>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
