@@ -6,11 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.job4j.model.FilmSession;
+import ru.job4j.dto.FilmSessionOutDto;
+import ru.job4j.exception.NotFoundException;
 import ru.job4j.service.FilmService;
 import ru.job4j.service.FilmSessionService;
-
-import java.util.Optional;
 
 /**
  * Контроллер для просмотра фильмов.
@@ -42,11 +41,12 @@ public class FilmSessionController {
 
     @GetMapping("/{id}")
     public String getById(Model model, @PathVariable int id) {
-        Optional<FilmSession> filmSessionOptional = filmSessionService.findById(id);
-        if (filmSessionOptional.isEmpty()) {
+        try {
+            FilmSessionOutDto filmSession = filmSessionService.findById(id);
+            model.addAttribute("filmSession", filmSession);
+        } catch (NotFoundException e) {
             return sendNotFoundError(model, NOT_FOUND_SESSION_MESSAGE);
         }
-        model.addAttribute("filmSession", filmSessionOptional.get());
         return "sessions/one";
     }
 }

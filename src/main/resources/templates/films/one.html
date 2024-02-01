@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head th:replace="~{blocks/base_head :: baseHead(~{::title})}">
-    <title>Фильм: </title>
+    <title th:inline="text">Фильм: [[${film.name}]]</title>
 </head>
 <body>
 <div class="container-fluid p-0">
@@ -25,7 +25,7 @@
                         </div>
                         <div class="row">
                             <span class="font-weight-bold">Жанр:&nbsp;</span>
-                            <span th:text="${genres[__${film.genreId - 1}__].name}"></span>
+                            <span th:text="${film.genre.name}"></span>
                         </div>
                         <div class="row">
                             <span class="font-weight-bold">Ограничение по возрасту:&nbsp;</span>
@@ -33,7 +33,7 @@
                         </div>
                         <div class="row">
                             <span class="font-weight-bold">Продолжительность:&nbsp;</span>
-                            <span th:text="${(film.durationInMinutes / 60) + ':' + (film.durationInMinutes % 60) + ':00'}"/></span>
+                            <span th:text="${film.durationInMinutes}"></span>
                         </div>
                     </div>
                 </div>
@@ -43,8 +43,14 @@
                     <p class="mb-0 text-justify" th:text="*{description}"></p>
                 </blockquote>
             </div>
+            <div class="row">
+                <div class="mb-3 col text-center">
+                    <a href="#" class="btn btn-secondary" onclick="history.back(1)"> Назад </a>
+                </div>
+            </div>
         </div>
     </div>
     <footer th:insert="~{blocks/footer :: footer}"></footer>
+</div>
 </body>
 </html>

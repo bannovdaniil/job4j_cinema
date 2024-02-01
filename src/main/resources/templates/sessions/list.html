@@ -24,18 +24,16 @@
                 </thead>
                 <tbody>
                 <tr th:each="filmSession, item: ${filmSessions}">
-                    <th>
-                    <a th:text="${item.index + 1}"
-                       th:href="@{/sessions/{filmSessionId}(filmSessionId=${filmSession.id})}"></a>
-                    </th>
-                    <td><a href="#" class="nav-link" data-toggle="modal" data-target="#exampleModalCenter"
-                           th:text="${films[__${filmSession.filmId - 1}__].name}"></a></td>
+                    <th th:text="${item.index + 1}"></th>
+                    <td><a th:href="@{/films/__${filmSession.film.id}__}" class="nav-link" target="_blank"
+                           th:text="${filmSession.film.name}"></a></td>
                     </td>
-                    <td th:text="${filmSession.hallsId}"/>
+                    <td th:text="${filmSession.hall.name}"/>
                     <td th:text="${{filmSession.startTime}}"/>
                     <td th:text="${{filmSession.endTime}}"/>
                     <td><span th:text="${filmSession.price}"></span>
-                        <button type="button" class="mx-4 btn btn-success btn-sm w-50">Купить</button>
+                        <a th:href="@{/tickets/__${filmSession.id}__/order/}"
+                           class="mx-4 btn btn-success btn-sm w-50">Купить</a>
                     </td>
                 </tr>
                 </tbody>
@@ -43,7 +41,6 @@
         </div>
     </div>
     <footer th:insert="~{blocks/footer :: footer}"></footer>
-    <modalFilm th:insert="~{blocks/modalFilm :: modalFilm}"></modalFilm>
 </div>
 </body>
 </html>

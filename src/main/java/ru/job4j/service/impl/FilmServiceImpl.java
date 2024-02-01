@@ -3,14 +3,20 @@ package ru.job4j.service.impl;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
 import ru.job4j.dto.FileDto;
+import ru.job4j.dto.FilmOutDto;
+import ru.job4j.exception.NotFoundException;
+import ru.job4j.mapper.FilmMapper;
 import ru.job4j.model.File;
 import ru.job4j.model.Film;
+import ru.job4j.model.Genre;
 import ru.job4j.repository.FilmRepository;
+import ru.job4j.repository.GenreRepository;
 import ru.job4j.service.FileService;
 import ru.job4j.service.FilmService;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 /**
  * Бизнес логика для Фильмов.
@@ -19,11 +25,15 @@ import java.util.Optional;
 @ThreadSafe
 public class FilmServiceImpl implements FilmService {
     private final FilmRepository filmRepository;
+    private final GenreRepository genreRepository;
     private final FileService fileService;
+    private final FilmMapper filmMapper;
 
-    public FilmServiceImpl(FilmRepository sql2OFilmRepositoryImpl, FileService fileService) {
+    public FilmServiceImpl(FilmRepository sql2OFilmRepositoryImpl, GenreRepository genreRepository, FileService fileService, FilmMapper filmMapper) {
         this.filmRepository = sql2OFilmRepositoryImpl;
+        this.genreRepository = genreRepository;
         this.fileService = fileService;
+        this.filmMapper = filmMapper;
     }
 
     @Override
@@ -39,7 +49,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public boolean deleteById(int id) {
-        var film = findById(id);
+        var film = filmRepository.findById(id);
         if (film.isPresent()) {
             filmRepository.deleteById(id);
             fileService.deleteById(film.get().getFileId());
@@ -64,12 +74,34 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public Optional<Film> findById(int id) {
-        return filmRepository.findById(id);
+    public FilmOutDto findById(int id) {
+        Film film = filmRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Film not found")
+        );
+
+        return getFilmOutDto(film);
     }
 
+
     @Override
-    public Collection<Film> findAll() {
-        return filmRepository.findAll();
+    public List<FilmOutDto> findAll() {
+        Collection<Film> filmList = filmRepository.findAll();
+        List<FilmOutDto> filmOutDtoList = new ArrayList<>();
+
+        for (Film film : filmList) {
+            filmOutDtoList.add(getFilmOutDto(film));
+        }
+
+        return filmOutDtoList;
     }
+
+    private FilmOutDto getFilmOutDto(Film film) {
+        Genre genre = genreRepository.findById(film.getGenreId()).orElseThrow(
+                () -> new NotFoundException("Film not applied to genre.")
+        );
+        String duration = String.format("%02d:%02d:00", film.getDurationInMinutes() / 60, film.getDurationInMinutes() % 60);
+
+        return filmMapper.map(film, genre, duration);
+    }
+
 }

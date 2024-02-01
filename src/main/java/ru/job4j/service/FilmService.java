@@ -1,10 +1,10 @@
 package ru.job4j.service;
 
 import ru.job4j.dto.FileDto;
+import ru.job4j.dto.FilmOutDto;
 import ru.job4j.model.Film;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 public interface FilmService {
 
@@ -14,7 +14,7 @@ public interface FilmService {
 
     boolean update(Film film, FileDto fileDto);
 
-    Optional<Film> findById(int id);
+    FilmOutDto findById(int id);
 
-    Collection<Film> findAll();
+    List<FilmOutDto> findAll();
 }

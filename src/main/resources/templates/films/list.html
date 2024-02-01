@@ -18,7 +18,7 @@
                     <th scope="col">Имя</th>
                     <th scope="col">Год</th>
                     <th scope="col">Жанр</th>
-                    <th scope="col">Ограничение по возрасту</th>
+                    <th scope="col text-center">Ограничение по возрасту</th>
                     <th scope="col">Продолжительность</th>
                 </tr>
                 </thead>
@@ -27,9 +27,9 @@
                     <th th:text="${item.index + 1}"/>
                     <td><a th:text="${film.name}" th:href="@{/films/{filmId}(filmId=${film.id})}"></a></td>
                     <td th:text="${film.year}"/>
-                    <td th:text="${genres[__${film.genreId - 1}__].name}"/>
-                    <td th:text="${film.minimalAge}"/>
-                    <td th:text="${(film.durationInMinutes / 60) + ':' + (film.durationInMinutes % 60) + ':00'}" />
+                    <td th:text="${film.genre.name}"/>
+                    <td class="text-center" th:inline="text">[[${film.minimalAge}]]+</td>
+                    <td th:text="${film.durationInMinutes}" />
                 </tr>
                 </tbody>
             </table>
