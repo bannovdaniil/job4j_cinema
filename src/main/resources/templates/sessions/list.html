@@ -25,9 +25,9 @@
                 <tbody>
                 <tr class="align-middle" th:each="filmSession, item: ${filmSessions}">
                     <th class="align-middle" th:text="${item.index + 1}"></th>
-                    <td class="align-middle"><a th:href="@{/films/__${filmSession.film.id}__}" class="nav-link"
-                                                target="_blank"
-                                                th:text="${filmSession.film.name}"></a></td>
+                    <td class="align-middle">
+                        <a th:href="@{/films/__${filmSession.film.id}__}" class="nav-link"
+                           th:text="${filmSession.film.name}"></a>
                     </td>
                     <td class="align-middle" th:text="${filmSession.hall.name}"/>
                     <td class="align-middle" th:text="${{filmSession.startTime}}"/>

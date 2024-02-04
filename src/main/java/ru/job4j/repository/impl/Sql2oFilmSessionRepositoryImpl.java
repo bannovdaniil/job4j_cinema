@@ -25,12 +25,12 @@ public class Sql2oFilmSessionRepositoryImpl implements FilmSessionRepository {
     public FilmSession save(FilmSession filmSession) {
         try (Connection connection = sql2o.open()) {
             String sql = """
-                    INSERT INTO film_sessions(film_id, halls_id, start_time, end_time, price)
+                    INSERT INTO film_sessions(film_id, hall_id, start_time, end_time, price)
                     VALUES (:filmId, :hallsId, :startTime, :endTime, :price)
                     """;
             Query query = connection.createQuery(sql, true)
                     .addParameter("filmId", filmSession.getFilmId())
-                    .addParameter("hallsId", filmSession.getHallsId())
+                    .addParameter("hallId", filmSession.getHallId())
                     .addParameter("startTime", filmSession.getStartTime())
                     .addParameter("endTime", filmSession.getEndTime())
                     .addParameter("price", filmSession.getPrice());
@@ -57,14 +57,14 @@ public class Sql2oFilmSessionRepositoryImpl implements FilmSessionRepository {
         try (Connection connection = sql2o.open()) {
             String sql = """
                     UPDATE film_sessions
-                    SET film_id = :filmId, halls_id = :hallsId,
+                    SET film_id = :filmId, hall_id = :hallsId,
                         start_time = :startTime, end_time = :endTime,
                         price = :price
                     WHERE id = :id
                     """;
             Query query = connection.createQuery(sql)
                     .addParameter("filmId", filmSession.getFilmId())
-                    .addParameter("hallsId", filmSession.getHallsId())
+                    .addParameter("hallsId", filmSession.getHallId())
                     .addParameter("startTime", filmSession.getStartTime())
                     .addParameter("endTime", filmSession.getEndTime())
                     .addParameter("price", filmSession.getPrice());
@@ -86,7 +86,7 @@ public class Sql2oFilmSessionRepositoryImpl implements FilmSessionRepository {
     @Override
     public Collection<FilmSession> findAll() {
         try (Connection connection = sql2o.open()) {
-            Query query = connection.createQuery("SELECT * FROM film_sessions ORDER BY start_time;");
+            Query query = connection.createQuery("SELECT * FROM film_sessions ORDER BY hall_id, start_time;");
             return query.setColumnMappings(FilmSession.COLUMN_MAPPING).executeAndFetch(FilmSession.class);
         }
     }

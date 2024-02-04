@@ -7,6 +7,7 @@ import ru.job4j.repository.GenreRepository;
 import ru.job4j.service.GenreService;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Бизнес логика для справочника Жанры фильмов.
@@ -23,5 +24,10 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public Collection<Genre> findAll() {
         return genreRepository.findAll();
+    }
+
+    @Override
+    public Optional<Genre> findById(int genreId) {
+        return genreRepository.findById(genreId);
     }
 }
