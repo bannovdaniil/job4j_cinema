@@ -1,11 +1,12 @@
 package ru.job4j.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Сущность пользователя
  */
-public class User {
+public class User implements Serializable {
     public static final Map<String, String> COLUMN_MAPPING = Map.of(
             "id", "id",
             "full_name", "fullName",

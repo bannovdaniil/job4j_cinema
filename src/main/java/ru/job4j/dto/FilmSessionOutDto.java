@@ -3,6 +3,7 @@ package ru.job4j.dto;
 import ru.job4j.model.Hall;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Сущность Для показа Расписания фильмов.
@@ -14,9 +15,11 @@ public class FilmSessionOutDto {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int price;
+    private List<List<PlaceDto>> placeList;
 
     public FilmSessionOutDto() {
     }
+
 
     public FilmSessionOutDto(int id, FilmOutDto film, Hall hall, LocalDateTime startTime, LocalDateTime endTime, int price) {
         this.id = id;
@@ -25,6 +28,18 @@ public class FilmSessionOutDto {
         this.startTime = startTime;
         this.endTime = endTime;
         this.price = price;
+        this.placeList = List.of(List.of());
+    }
+
+    public FilmSessionOutDto(int id, FilmOutDto film, Hall hall, LocalDateTime startTime,
+                             LocalDateTime endTime, int price, List<List<PlaceDto>> placeList) {
+        this.id = id;
+        this.film = film;
+        this.hall = hall;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.price = price;
+        this.placeList = placeList;
     }
 
     public int getId() {
@@ -73,5 +88,13 @@ public class FilmSessionOutDto {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public List<List<PlaceDto>> getPlaceList() {
+        return placeList;
+    }
+
+    public void setPlaceList(List<List<PlaceDto>> placeList) {
+        this.placeList = placeList;
     }
 }

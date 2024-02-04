@@ -9,6 +9,7 @@ import ru.job4j.repository.impl.Sql2oTicketRepositoryImpl;
 import ru.job4j.service.TicketService;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Бизнес логика для Билетов.
@@ -21,7 +22,6 @@ public class TicketServiceImpl implements TicketService {
     public TicketServiceImpl(Sql2oTicketRepositoryImpl sql2oTicketRepository) {
         this.ticketRepository = sql2oTicketRepository;
     }
-
 
     @Override
     public Ticket save(Ticket ticket) {
@@ -46,9 +46,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Ticket findByPlace(int sessionId, int rowNumber, int placeNumber) {
-        return ticketRepository.findByPlace(sessionId, rowNumber, placeNumber).orElseThrow(
-                () -> new NotFoundException("Ticket not found.")
-        );
+    public Optional<Ticket> findByPlace(int sessionId, int rowNumber, int placeNumber) {
+        return ticketRepository.findByPlace(sessionId, rowNumber, placeNumber);
     }
 }

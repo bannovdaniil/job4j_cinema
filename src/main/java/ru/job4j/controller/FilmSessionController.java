@@ -1,5 +1,6 @@
 package ru.job4j.controller;
 
+import jakarta.servlet.http.HttpSession;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,13 +41,14 @@ public class FilmSessionController {
     }
 
     @GetMapping("/{id}")
-    public String getById(Model model, @PathVariable int id) {
+    public String getById(Model model, @PathVariable int id, HttpSession session) {
         try {
             FilmSessionOutDto filmSession = filmSessionService.findById(id);
             model.addAttribute("filmSession", filmSession);
         } catch (NotFoundException e) {
             return sendNotFoundError(model, NOT_FOUND_SESSION_MESSAGE);
         }
-        return "sessions/one";
+        return "sessions/order";
     }
+
 }

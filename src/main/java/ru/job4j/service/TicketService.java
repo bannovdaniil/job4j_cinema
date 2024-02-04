@@ -3,6 +3,7 @@ package ru.job4j.service;
 import ru.job4j.model.Ticket;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TicketService {
 
@@ -14,5 +15,5 @@ public interface TicketService {
 
     List<Ticket> findBySession(int sessionId);
 
-    Ticket findByPlace(int sessionId, int rowNumber, int placeNumber);
+    Optional<Ticket> findByPlace(int sessionId, int rowNumber, int placeNumber);
 }

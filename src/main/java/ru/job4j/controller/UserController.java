@@ -41,9 +41,9 @@ public class UserController {
             return "users/login";
         }
         HttpSession session = request.getSession();
-        session.setAttribute("user", userOptional.get());
+        session.setAttribute("userLogged", userOptional.get());
 
-        return "redirect:/films";
+        return "redirect:/sessions";
     }
 
     @GetMapping("/logout")
