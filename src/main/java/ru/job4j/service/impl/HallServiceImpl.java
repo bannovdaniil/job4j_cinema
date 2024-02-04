@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
- * Бизнес логика для справочника Жанры фильмов.
+ * Бизнес логика для справочника Залы.
  */
 @Service
 @ThreadSafe
