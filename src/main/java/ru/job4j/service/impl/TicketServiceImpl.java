@@ -3,8 +3,14 @@ package ru.job4j.service.impl;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
 import ru.job4j.exception.NotFoundException;
+import ru.job4j.model.FilmSession;
+import ru.job4j.model.Hall;
 import ru.job4j.model.Ticket;
+import ru.job4j.repository.FilmSessionRepository;
+import ru.job4j.repository.HallRepository;
 import ru.job4j.repository.TicketRepository;
+import ru.job4j.repository.impl.Sql2oFilmSessionRepositoryImpl;
+import ru.job4j.repository.impl.Sql2oHallRepositoryImpl;
 import ru.job4j.repository.impl.Sql2oTicketRepositoryImpl;
 import ru.job4j.service.TicketService;
 
@@ -18,9 +24,15 @@ import java.util.Optional;
 @ThreadSafe
 public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
+    private final FilmSessionRepository filmSessionRepository;
+    private final HallRepository hallRepository;
 
-    public TicketServiceImpl(Sql2oTicketRepositoryImpl sql2oTicketRepository) {
+    public TicketServiceImpl(Sql2oTicketRepositoryImpl sql2oTicketRepository,
+                             Sql2oFilmSessionRepositoryImpl sql2oFilmSessionRepository,
+                             Sql2oHallRepositoryImpl sql2oHallRepository) {
         this.ticketRepository = sql2oTicketRepository;
+        this.filmSessionRepository = sql2oFilmSessionRepository;
+        this.hallRepository = sql2oHallRepository;
     }
 
     @Override
@@ -47,6 +59,19 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Optional<Ticket> findByPlace(int sessionId, int rowNumber, int placeNumber) {
+        if (rowNumber < 1 || placeNumber < 1) {
+            throw new IllegalArgumentException("Таких мест не существует.");
+        }
+        FilmSession filmSession = filmSessionRepository.findById(sessionId).orElseThrow(
+                () -> new NotFoundException("Session for ticket not found.")
+        );
+        Hall hall = hallRepository.findById(filmSession.getHallId()).orElseThrow(
+                () -> new NotFoundException("Hall for session in ticket not found.")
+        );
+        if (rowNumber > hall.getRowCount() || placeNumber > hall.getPlaceCount()) {
+            throw new IllegalArgumentException("Таких мест не существует.");
+        }
+
         return ticketRepository.findByPlace(sessionId, rowNumber, placeNumber);
     }
 }

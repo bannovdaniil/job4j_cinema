@@ -1,10 +1,8 @@
 package ru.job4j.controller;
 
-import jakarta.servlet.http.HttpSession;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +13,7 @@ import ru.job4j.service.TicketService;
 import java.util.Optional;
 
 /**
- * Контроллер работы с Пользователями
+ * Контроллер работы с Билетом
  */
 @Controller
 @ThreadSafe
@@ -28,9 +26,9 @@ public class TicketController {
     }
 
     @PostMapping("/order")
-    public String loginUser(@ModelAttribute Ticket ticket, HttpSession session,
-                            @RequestParam(value = "placeBox", defaultValue = "x") String placeBox,
-                            BindingResult bindingResult, Model model) {
+    public String orderTicket(@ModelAttribute Ticket ticket,
+                              @RequestParam(value = "placeBox", defaultValue = "x") String placeBox,
+                              Model model) {
         if (!"x".equals(placeBox) && placeBox.matches("^\\d+-\\d+$")) {
             String[] places = placeBox.split("-");
             ticket.setRowNumber(Integer.parseInt(places[0]));

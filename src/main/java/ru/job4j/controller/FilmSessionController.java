@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.job4j.dto.FilmSessionOutDto;
 import ru.job4j.exception.NotFoundException;
-import ru.job4j.service.FilmService;
 import ru.job4j.service.FilmSessionService;
 
 /**
- * Контроллер для просмотра фильмов.
+ * Контроллер для просмотра сеансов фильмов.
  */
 @Controller
 @ThreadSafe
@@ -21,11 +20,9 @@ import ru.job4j.service.FilmSessionService;
 public class FilmSessionController {
     private static final String NOT_FOUND_SESSION_MESSAGE = "Film Session not found.";
     private final FilmSessionService filmSessionService;
-    private final FilmService filmService;
 
-    public FilmSessionController(FilmSessionService filmSessionService, FilmService filmService) {
+    public FilmSessionController(FilmSessionService filmSessionService) {
         this.filmSessionService = filmSessionService;
-        this.filmService = filmService;
     }
 
     private static String sendNotFoundError(Model model, String message) {
@@ -36,7 +33,6 @@ public class FilmSessionController {
     @GetMapping
     public String getAll(Model model) {
         model.addAttribute("filmSessions", filmSessionService.findAll());
-        model.addAttribute("films", filmService.findAll());
         return "sessions/list";
     }
 
