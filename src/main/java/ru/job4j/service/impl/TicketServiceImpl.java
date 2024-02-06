@@ -9,9 +9,6 @@ import ru.job4j.model.Ticket;
 import ru.job4j.repository.FilmSessionRepository;
 import ru.job4j.repository.HallRepository;
 import ru.job4j.repository.TicketRepository;
-import ru.job4j.repository.impl.Sql2oFilmSessionRepositoryImpl;
-import ru.job4j.repository.impl.Sql2oHallRepositoryImpl;
-import ru.job4j.repository.impl.Sql2oTicketRepositoryImpl;
 import ru.job4j.service.TicketService;
 
 import java.util.List;
@@ -27,9 +24,9 @@ public class TicketServiceImpl implements TicketService {
     private final FilmSessionRepository filmSessionRepository;
     private final HallRepository hallRepository;
 
-    public TicketServiceImpl(Sql2oTicketRepositoryImpl sql2oTicketRepository,
-                             Sql2oFilmSessionRepositoryImpl sql2oFilmSessionRepository,
-                             Sql2oHallRepositoryImpl sql2oHallRepository) {
+    public TicketServiceImpl(TicketRepository sql2oTicketRepository,
+                             FilmSessionRepository sql2oFilmSessionRepository,
+                             HallRepository sql2oHallRepository) {
         this.ticketRepository = sql2oTicketRepository;
         this.filmSessionRepository = sql2oFilmSessionRepository;
         this.hallRepository = sql2oHallRepository;

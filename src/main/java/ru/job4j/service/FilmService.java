@@ -10,8 +10,6 @@ public interface FilmService {
 
     Film save(Film film, FileDto fileDto);
 
-    boolean deleteById(int id);
-
     boolean update(Film film, FileDto fileDto);
 
     FilmOutDto findById(int id);

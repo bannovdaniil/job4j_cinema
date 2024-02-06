@@ -47,16 +47,6 @@ public class FilmServiceImpl implements FilmService {
         film.setFileId(file.getId());
     }
 
-    @Override
-    public boolean deleteById(int id) {
-        var film = filmRepository.findById(id);
-        if (film.isPresent()) {
-            filmRepository.deleteById(id);
-            fileService.deleteById(film.get().getFileId());
-        }
-        return filmRepository.deleteById(id);
-    }
-
     /**
      * Если передан новый не пустой файл, то старый удаляем, а новый сохраняем
      */

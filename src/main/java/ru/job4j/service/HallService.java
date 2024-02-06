@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface HallService {
     Collection<Hall> findAll();
+
     Optional<Hall> findById(int hallId);
 }

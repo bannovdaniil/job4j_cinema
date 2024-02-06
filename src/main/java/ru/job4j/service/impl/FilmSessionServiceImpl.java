@@ -11,9 +11,6 @@ import ru.job4j.model.Hall;
 import ru.job4j.repository.FilmSessionRepository;
 import ru.job4j.repository.HallRepository;
 import ru.job4j.repository.TicketRepository;
-import ru.job4j.repository.impl.Sql2oFilmSessionRepositoryImpl;
-import ru.job4j.repository.impl.Sql2oHallRepositoryImpl;
-import ru.job4j.repository.impl.Sql2oTicketRepositoryImpl;
 import ru.job4j.service.FilmService;
 import ru.job4j.service.FilmSessionService;
 
@@ -33,10 +30,10 @@ public class FilmSessionServiceImpl implements FilmSessionService {
     private final TicketRepository ticketRepository;
     private final FilmSessionMapper filmSessionMapper;
 
-    public FilmSessionServiceImpl(Sql2oFilmSessionRepositoryImpl sql2oFilmSessionRepository,
+    public FilmSessionServiceImpl(FilmSessionRepository sql2oFilmSessionRepository,
                                   FilmService filmService,
                                   FilmSessionMapper filmSessionMapper,
-                                  Sql2oHallRepositoryImpl sql2oHallRepository, Sql2oTicketRepositoryImpl sql2oTicketRepository) {
+                                  HallRepository sql2oHallRepository, TicketRepository sql2oTicketRepository) {
         this.filmSessionRepository = sql2oFilmSessionRepository;
         this.filmService = filmService;
         this.filmSessionMapper = filmSessionMapper;
