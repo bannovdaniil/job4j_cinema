@@ -10,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.job4j.mapper.FilmSessionMapper;
 import ru.job4j.model.FilmSession;
 import ru.job4j.model.Hall;
-import ru.job4j.model.Ticket;
 import ru.job4j.repository.FilmSessionRepository;
 import ru.job4j.repository.HallRepository;
 import ru.job4j.repository.TicketRepository;

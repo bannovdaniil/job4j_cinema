@@ -21,9 +21,9 @@ public class Sql2oHallRepositoryImpl implements HallRepository {
     @Override
     public Collection<Hall> findAll() {
         try (Connection connection = sql2o.open()) {
-            Query query = connection.createQuery("SELECT * FROM halls");
+            Query query = connection.createQuery("SELECT id, name, row_count, place_count, description FROM halls;");
 
-            return query.executeAndFetch(Hall.class);
+            return query.setColumnMappings(Hall.COLUMN_MAPPING).executeAndFetch(Hall.class);
         }
     }
 
