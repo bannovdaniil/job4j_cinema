@@ -25,7 +25,7 @@ public class Sql2oFilmRepositoryImpl implements FilmRepository {
     public Film save(Film film) {
         try (Connection connection = sql2o.open()) {
             String sql = """
-                    INSERT INTO films(name, description, year, genre_id, minimal_age, duration_in_minutes, file_id)
+                    INSERT INTO films(name, description, "year", genre_id, minimal_age, duration_in_minutes, file_id)
                     VALUES (:name, :description, :year, :genreId, :minimalAge, :durationInMinutes, :fileId)
                     """;
             Query query = connection.createQuery(sql, true)

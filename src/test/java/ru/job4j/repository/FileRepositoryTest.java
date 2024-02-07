@@ -62,11 +62,13 @@ class FileRepositoryTest {
     public static void liquibase(DataSource dataSource, String defaultLiquibaseChangelog) throws Exception {
         Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(dataSource.getConnection()));
         Liquibase liquibase = new Liquibase(defaultLiquibaseChangelog, new ClassLoaderResourceAccessor(), database);
+        liquibase.dropAll();
+        liquibase.clearCheckSums();
         liquibase.update();
     }
 
     @AfterEach
-    public void clearUsers() {
+    public void clearFiles() {
         clearFilesTable();
     }
 
