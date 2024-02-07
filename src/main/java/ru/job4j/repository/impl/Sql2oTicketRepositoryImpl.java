@@ -68,7 +68,7 @@ public class Sql2oTicketRepositoryImpl implements TicketRepository {
         try (Connection connection = sql2o.open()) {
             Query query = connection.createQuery("""
                     SELECT * FROM tickets
-                    WHERE session_id = :ticketId
+                    WHERE session_id = :sessionId
                     """);
             query.addParameter("sessionId", sessionId);
             return query.setColumnMappings(Ticket.COLUMN_MAPPING).executeAndFetch(Ticket.class);

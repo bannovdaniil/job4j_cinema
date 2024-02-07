@@ -10,18 +10,19 @@ import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
 import ru.job4j.configuration.DatasourceConfiguration;
-import ru.job4j.model.Film;
-import ru.job4j.repository.impl.Sql2oFilmRepositoryImpl;
+import ru.job4j.model.FilmSession;
+import ru.job4j.repository.impl.Sql2oFilmSessionRepositoryImpl;
 import ru.job4j.repository.impl.Sql2oUserRepositoryImpl;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class FilmRepositoryTest {
-    private static FilmRepository filmRepository;
+class FilmSessionRepositoryTest {
+    private static FilmSessionRepository filmSessionRepository;
     private static Sql2o sql2o;
     private static DataSource datasource;
     private static String liquibaseSchema;
@@ -41,7 +42,7 @@ class FilmRepositoryTest {
         datasource = configuration.connectionPool(url, username, password);
         sql2o = configuration.databaseClient(datasource);
 
-        filmRepository = new Sql2oFilmRepositoryImpl(sql2o);
+        filmSessionRepository = new Sql2oFilmSessionRepositoryImpl(sql2o);
         liquibase(datasource, liquibaseSchema);
         clearFilmsTable();
     }
@@ -54,8 +55,6 @@ class FilmRepositoryTest {
     private static void clearFilmsTable() {
         try (Connection connection = sql2o.open()) {
             Query query = connection.createQuery("DELETE FROM film_sessions;");
-            query.executeUpdate();
-            query = connection.createQuery("DELETE FROM films;");
             query.executeUpdate();
         }
     }
@@ -76,44 +75,56 @@ class FilmRepositoryTest {
     @DisplayName("Save then ok")
     @Test
     void save() {
-        Film film = new Film("film new", "description film new", 2020, 1, 19, 120, 1);
-        Film saveFilm = filmRepository.save(film);
-        Optional<Film> resultFilmOptional = filmRepository.findById(saveFilm.getId());
+        FilmSession filmSession = new FilmSession(1, 1,
+                LocalDateTime.now().withNano(0),
+                LocalDateTime.now().withNano(0),
+                200
+        );
+        FilmSession saveFilmSession = filmSessionRepository.save(filmSession);
+        Optional<FilmSession> resultFilmSessionOptional = filmSessionRepository.findById(saveFilmSession.getId());
 
-        Assertions.assertTrue(resultFilmOptional.isPresent());
+        Assertions.assertTrue(resultFilmSessionOptional.isPresent());
 
-        assertThat(saveFilm).usingRecursiveComparison().isEqualTo(resultFilmOptional.orElseThrow());
+        assertThat(saveFilmSession).usingRecursiveComparison().isEqualTo(resultFilmSessionOptional.orElseThrow());
     }
 
     @DisplayName("Update then ok")
     @Test
     void update() {
-        Film film = new Film("film new", "description film new", 2020, 1, 19, 120, 1);
-        Film saveFilm = filmRepository.save(film);
-        saveFilm.setName("edit film");
-        saveFilm.setDescription("edit desc");
-        saveFilm.setYear(2023);
-        saveFilm.setGenreId(2);
-        saveFilm.setMinimalAge(12);
-        saveFilm.setDurationInMinutes(100);
-        saveFilm.setFileId(2);
+        FilmSession filmSession = new FilmSession(1, 1,
+                LocalDateTime.now().withNano(0),
+                LocalDateTime.now().withNano(0),
+                200
+        );
+        FilmSession saveFilmSession = filmSessionRepository.save(filmSession);
 
-        filmRepository.update(saveFilm);
+        saveFilmSession.setFilmId(2);
+        saveFilmSession.setHallId(2);
+        saveFilmSession.setStartTime(LocalDateTime.now().withNano(0));
+        saveFilmSession.setEndTime(LocalDateTime.now().withNano(0));
+        saveFilmSession.setPrice(300);
 
-        Optional<Film> resultFilmOptional = filmRepository.findById(saveFilm.getId());
+        filmSessionRepository.update(saveFilmSession);
+
+        Optional<FilmSession> resultFilmOptional = filmSessionRepository.findById(saveFilmSession.getId());
 
         Assertions.assertTrue(resultFilmOptional.isPresent());
 
-        assertThat(saveFilm).usingRecursiveComparison().isEqualTo(resultFilmOptional.orElseThrow());
+        assertThat(saveFilmSession).usingRecursiveComparison().isEqualTo(resultFilmOptional.orElseThrow());
     }
 
     @DisplayName("findAll then size Of List more then 0")
     @Test
     void findAll() {
-        int beforeSize = filmRepository.findAll().size();
-        Film film = new Film("film findAll", "description film findAll", 2020, 1, 19, 120, 1);
-        filmRepository.save(film);
-        int afterSize = filmRepository.findAll().size();
+        int beforeSize = filmSessionRepository.findAll().size();
+        FilmSession filmSession = new FilmSession(1, 1,
+                LocalDateTime.now().withNano(0),
+                LocalDateTime.now().withNano(0),
+                200
+        );
+
+        filmSessionRepository.save(filmSession);
+        int afterSize = filmSessionRepository.findAll().size();
 
         Assertions.assertNotEquals(beforeSize, afterSize);
         Assertions.assertEquals(beforeSize + 1, afterSize);
@@ -122,12 +133,15 @@ class FilmRepositoryTest {
     @DisplayName("findById save then getId == saveId")
     @Test
     void findById() {
-        Film film = new Film("film name find by id", "description film  find by id", 2020, 1, 19, 120, 1);
-        Film exceptedFilm = filmRepository.save(film);
+        FilmSession filmSession = new FilmSession(1, 1,
+                LocalDateTime.now().withNano(0),
+                LocalDateTime.now().withNano(0),
+                200
+        );
+        FilmSession saveFilmSession = filmSessionRepository.save(filmSession);
 
-        Film resultFilm = filmRepository.findById(exceptedFilm.getId()).orElseThrow();
+        FilmSession resultFilmSession = filmSessionRepository.findById(saveFilmSession.getId()).orElseThrow();
 
-        Assertions.assertEquals(exceptedFilm.getId(), resultFilm.getId());
+        assertThat(saveFilmSession).usingRecursiveComparison().isEqualTo(resultFilmSession);
     }
-
 }

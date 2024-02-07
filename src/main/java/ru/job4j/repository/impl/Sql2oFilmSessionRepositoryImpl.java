@@ -26,7 +26,7 @@ public class Sql2oFilmSessionRepositoryImpl implements FilmSessionRepository {
         try (Connection connection = sql2o.open()) {
             String sql = """
                     INSERT INTO film_sessions(film_id, hall_id, start_time, end_time, price)
-                    VALUES (:filmId, :hallsId, :startTime, :endTime, :price)
+                    VALUES (:filmId, :hallId, :startTime, :endTime, :price)
                     """;
             Query query = connection.createQuery(sql, true)
                     .addParameter("filmId", filmSession.getFilmId())
@@ -34,22 +34,10 @@ public class Sql2oFilmSessionRepositoryImpl implements FilmSessionRepository {
                     .addParameter("startTime", filmSession.getStartTime())
                     .addParameter("endTime", filmSession.getEndTime())
                     .addParameter("price", filmSession.getPrice());
-            int generatedId = query.executeUpdate().getKey(Integer.class);
+            int generatedId = query.setColumnMappings(FilmSession.COLUMN_MAPPING).executeUpdate().getKey(Integer.class);
             filmSession.setId(generatedId);
             return filmSession;
         }
-    }
-
-    @Override
-    public boolean deleteById(Integer id) {
-        boolean result;
-        try (Connection connection = sql2o.open()) {
-            Query query = connection.createQuery("DELETE FROM film_sessions WHERE id = :id");
-            query.addParameter("id", id);
-            query.executeUpdate();
-            result = connection.getResult() != 0;
-        }
-        return result;
     }
 
     @Override
@@ -57,18 +45,19 @@ public class Sql2oFilmSessionRepositoryImpl implements FilmSessionRepository {
         try (Connection connection = sql2o.open()) {
             String sql = """
                     UPDATE film_sessions
-                    SET film_id = :filmId, hall_id = :hallsId,
+                    SET film_id = :filmId, hall_id = :hallId,
                         start_time = :startTime, end_time = :endTime,
                         price = :price
                     WHERE id = :id
                     """;
             Query query = connection.createQuery(sql)
                     .addParameter("filmId", filmSession.getFilmId())
-                    .addParameter("hallsId", filmSession.getHallId())
+                    .addParameter("hallId", filmSession.getHallId())
                     .addParameter("startTime", filmSession.getStartTime())
                     .addParameter("endTime", filmSession.getEndTime())
-                    .addParameter("price", filmSession.getPrice());
-            int affectedRows = query.executeUpdate().getResult();
+                    .addParameter("price", filmSession.getPrice())
+                    .addParameter("id", filmSession.getId());
+            int affectedRows = query.setColumnMappings(FilmSession.COLUMN_MAPPING).executeUpdate().getResult();
             return affectedRows > 0;
         }
     }

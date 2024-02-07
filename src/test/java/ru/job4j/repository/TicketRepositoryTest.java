@@ -10,18 +10,19 @@ import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
 import ru.job4j.configuration.DatasourceConfiguration;
-import ru.job4j.model.Film;
-import ru.job4j.repository.impl.Sql2oFilmRepositoryImpl;
+import ru.job4j.model.Ticket;
+import ru.job4j.repository.impl.Sql2oTicketRepositoryImpl;
 import ru.job4j.repository.impl.Sql2oUserRepositoryImpl;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class FilmRepositoryTest {
-    private static FilmRepository filmRepository;
+class TicketRepositoryTest {
+    private static TicketRepository ticketRepository;
     private static Sql2o sql2o;
     private static DataSource datasource;
     private static String liquibaseSchema;
@@ -41,23 +42,13 @@ class FilmRepositoryTest {
         datasource = configuration.connectionPool(url, username, password);
         sql2o = configuration.databaseClient(datasource);
 
-        filmRepository = new Sql2oFilmRepositoryImpl(sql2o);
+        ticketRepository = new Sql2oTicketRepositoryImpl(sql2o);
         liquibase(datasource, liquibaseSchema);
-        clearFilmsTable();
     }
 
     @AfterAll
     static void afterAll() throws Exception {
         liquibase(datasource, liquibaseSchema);
-    }
-
-    private static void clearFilmsTable() {
-        try (Connection connection = sql2o.open()) {
-            Query query = connection.createQuery("DELETE FROM film_sessions;");
-            query.executeUpdate();
-            query = connection.createQuery("DELETE FROM films;");
-            query.executeUpdate();
-        }
     }
 
     public static void liquibase(DataSource dataSource, String defaultLiquibaseChangelog) throws Exception {
@@ -69,51 +60,34 @@ class FilmRepositoryTest {
     }
 
     @AfterEach
-    public void clearFilms() {
-        clearFilmsTable();
+    public void clearTickets() {
+        try (Connection connection = sql2o.open()) {
+            Query query = connection.createQuery("TRUNCATE TABLE tickets;");
+            query.executeUpdate();
+        }
     }
 
     @DisplayName("Save then ok")
     @Test
     void save() {
-        Film film = new Film("film new", "description film new", 2020, 1, 19, 120, 1);
-        Film saveFilm = filmRepository.save(film);
-        Optional<Film> resultFilmOptional = filmRepository.findById(saveFilm.getId());
+        Ticket ticket = new Ticket(1, 1, 2, 2, 1);
 
-        Assertions.assertTrue(resultFilmOptional.isPresent());
+        Ticket saveTicket = ticketRepository.save(ticket);
+        Optional<Ticket> resultTicket = ticketRepository.findById(saveTicket.getId());
 
-        assertThat(saveFilm).usingRecursiveComparison().isEqualTo(resultFilmOptional.orElseThrow());
-    }
+        Assertions.assertTrue(resultTicket.isPresent());
 
-    @DisplayName("Update then ok")
-    @Test
-    void update() {
-        Film film = new Film("film new", "description film new", 2020, 1, 19, 120, 1);
-        Film saveFilm = filmRepository.save(film);
-        saveFilm.setName("edit film");
-        saveFilm.setDescription("edit desc");
-        saveFilm.setYear(2023);
-        saveFilm.setGenreId(2);
-        saveFilm.setMinimalAge(12);
-        saveFilm.setDurationInMinutes(100);
-        saveFilm.setFileId(2);
-
-        filmRepository.update(saveFilm);
-
-        Optional<Film> resultFilmOptional = filmRepository.findById(saveFilm.getId());
-
-        Assertions.assertTrue(resultFilmOptional.isPresent());
-
-        assertThat(saveFilm).usingRecursiveComparison().isEqualTo(resultFilmOptional.orElseThrow());
+        assertThat(saveTicket).usingRecursiveComparison().isEqualTo(resultTicket.orElseThrow());
     }
 
     @DisplayName("findAll then size Of List more then 0")
     @Test
     void findAll() {
-        int beforeSize = filmRepository.findAll().size();
-        Film film = new Film("film findAll", "description film findAll", 2020, 1, 19, 120, 1);
-        filmRepository.save(film);
-        int afterSize = filmRepository.findAll().size();
+        int beforeSize = ticketRepository.findAll().size();
+        Ticket ticket = new Ticket(1, 1, 2, 2, 1);
+
+        ticketRepository.save(ticket);
+        int afterSize = ticketRepository.findAll().size();
 
         Assertions.assertNotEquals(beforeSize, afterSize);
         Assertions.assertEquals(beforeSize + 1, afterSize);
@@ -122,12 +96,36 @@ class FilmRepositoryTest {
     @DisplayName("findById save then getId == saveId")
     @Test
     void findById() {
-        Film film = new Film("film name find by id", "description film  find by id", 2020, 1, 19, 120, 1);
-        Film exceptedFilm = filmRepository.save(film);
+        Ticket ticket = new Ticket(1, 1, 2, 2, 1);
 
-        Film resultFilm = filmRepository.findById(exceptedFilm.getId()).orElseThrow();
+        Ticket saveTicket = ticketRepository.save(ticket);
+        Ticket resultTicket = ticketRepository.findById(saveTicket.getId()).orElseThrow();
 
-        Assertions.assertEquals(exceptedFilm.getId(), resultFilm.getId());
+        assertThat(saveTicket).usingRecursiveComparison().isEqualTo(resultTicket);
     }
 
+    @Test
+    void findBySession() {
+        int expectedSessionId = 2;
+
+        Ticket ticket = new Ticket(1, expectedSessionId, 14, 15, 1);
+
+        Ticket saveTicket = ticketRepository.save(ticket);
+        List<Ticket> ticketList = ticketRepository.findBySession(expectedSessionId);
+
+        assertThat(saveTicket).usingRecursiveComparison().isEqualTo(ticketList.get(0));
+    }
+
+    @Test
+    void findByPlace() {
+        int expectedSessionId = 12;
+        int expectedRowNumber = 13;
+        int expectedPlaceNumber = 15;
+        Ticket ticket = new Ticket(1, expectedSessionId, expectedRowNumber, expectedPlaceNumber, 1);
+
+        Ticket saveTicket = ticketRepository.save(ticket);
+        Ticket resultTicket = ticketRepository.findByPlace(expectedSessionId, expectedRowNumber, expectedPlaceNumber).orElseThrow();
+
+        assertThat(saveTicket).usingRecursiveComparison().isEqualTo(resultTicket);
+    }
 }

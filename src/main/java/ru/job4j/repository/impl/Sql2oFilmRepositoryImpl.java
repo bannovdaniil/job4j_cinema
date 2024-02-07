@@ -43,24 +43,12 @@ public class Sql2oFilmRepositoryImpl implements FilmRepository {
     }
 
     @Override
-    public boolean deleteById(Integer id) {
-        boolean result;
-        try (Connection connection = sql2o.open()) {
-            Query query = connection.createQuery("DELETE FROM films WHERE id = :id");
-            query.addParameter("id", id);
-            query.executeUpdate();
-            result = connection.getResult() != 0;
-        }
-        return result;
-    }
-
-    @Override
     public boolean update(Film film) {
         try (Connection connection = sql2o.open()) {
             String sql = """
                     UPDATE films
                     SET name = :name, description = :description,
-                        year = :year, genre_id = :genreId,
+                        "year" = :year, genre_id = :genreId,
                         minimal_age = :minimalAge, duration_in_minutes = :durationInMinutes,
                         file_id = :fileId
                     WHERE id = :id
@@ -72,7 +60,8 @@ public class Sql2oFilmRepositoryImpl implements FilmRepository {
                     .addParameter("genreId", film.getGenreId())
                     .addParameter("minimalAge", film.getMinimalAge())
                     .addParameter("durationInMinutes", film.getDurationInMinutes())
-                    .addParameter("fileId", film.getFileId());
+                    .addParameter("fileId", film.getFileId())
+                    .addParameter("id", film.getId());
             int affectedRows = query.executeUpdate().getResult();
             return affectedRows > 0;
         }
