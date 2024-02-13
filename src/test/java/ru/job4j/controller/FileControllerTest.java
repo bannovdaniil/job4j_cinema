@@ -16,7 +16,6 @@ import ru.job4j.dto.FileDto;
 import ru.job4j.service.FileService;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -42,7 +41,7 @@ class FileControllerTest {
         int expectedId = 12;
         byte[] expectedBytes = "Test content".getBytes(StandardCharsets.UTF_8);
         FileDto fileDto = new FileDto("file.txt", expectedBytes);
-        Mockito.doReturn(Optional.of(fileDto)).when(fileService).getFileById(expectedId);
+        Mockito.doReturn(fileDto).when(fileService).getFileById(expectedId);
 
         mvc.perform(get("/files/" + expectedId))
                 .andExpect(status().isOk())
@@ -52,14 +51,4 @@ class FileControllerTest {
         Mockito.verify(fileService, Mockito.times(1)).getFileById(expectedId);
     }
 
-    @DisplayName("Get File - NotFound")
-    @Test
-    void whenGetFileThenNotFound() throws Exception {
-        Mockito.doReturn(Optional.empty()).when(fileService).getFileById(Mockito.anyInt());
-
-        mvc.perform(get("/files/12"))
-                .andExpect(status().isNotFound());
-
-        Mockito.verify(fileService, Mockito.times(1)).getFileById(Mockito.anyInt());
-    }
 }

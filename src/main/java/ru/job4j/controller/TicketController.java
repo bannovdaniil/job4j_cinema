@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.model.Ticket;
 import ru.job4j.service.TicketService;
 
-import java.util.Optional;
-
 /**
  * Контроллер работы с Билетом
  */
@@ -35,11 +33,6 @@ public class TicketController {
             ticket.setPlaceNumber(Integer.parseInt(places[1]));
         }
 
-        Optional<Ticket> requiredTicket = ticketService.findByPlace(ticket.getSessionId(), ticket.getRowNumber(), ticket.getPlaceNumber());
-        if (requiredTicket.isPresent()) {
-            model.addAttribute("ticket", ticket);
-            return "tickets/error";
-        }
         Ticket saveTicket = ticketService.save(ticket);
         model.addAttribute("ticket", saveTicket);
 

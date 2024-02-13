@@ -68,7 +68,6 @@ public class FilmServiceImpl implements FilmService {
         Film film = filmRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Film not found")
         );
-
         return getFilmOutDto(film);
     }
 

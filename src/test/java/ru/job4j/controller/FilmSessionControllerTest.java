@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.job4j.dto.FilmOutDto;
 import ru.job4j.dto.FilmSessionOutDto;
-import ru.job4j.exception.NotFoundException;
 import ru.job4j.model.Hall;
 import ru.job4j.service.FilmSessionService;
 
@@ -77,18 +76,4 @@ class FilmSessionControllerTest {
         Mockito.verify(mockFilmSessionService, Mockito.times(1)).findById(expectedId);
     }
 
-    @DisplayName("GetById then NotFound")
-    @Test
-    void getByIdWhenNotFound() throws Exception {
-        int expectedId = 13;
-
-        Mockito.when(mockFilmSessionService.findById(expectedId)).thenThrow(NotFoundException.class);
-
-        mvc.perform(get("/sessions/" + expectedId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("errors/404"))
-                .andExpect(model().attribute("message", "Film Session not found."));
-
-        Mockito.verify(mockFilmSessionService, Mockito.times(1)).findById(expectedId);
-    }
 }

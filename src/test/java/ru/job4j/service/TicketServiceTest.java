@@ -48,6 +48,11 @@ class TicketServiceTest {
                 3,
                 13
         );
+        Hall hall = new Hall("Test", 1000, 1000, "Test desc");
+
+        Mockito.doReturn(Optional.of(new FilmSession())).when(mockFilmSessionRepository).findById(Mockito.anyInt());
+        Mockito.doReturn(Optional.of(hall)).when(mockHallRepository).findById(Mockito.anyInt());
+
         ticketService.save(expectedTicket);
 
         Mockito.verify(mockTicketRepository, Mockito.times(1)).save(expectedTicket);

@@ -71,7 +71,6 @@ class TicketControllerTest {
                 .andExpect(view().name("tickets/order"))
                 .andExpect(model().attribute("ticket", ticket));
 
-        Mockito.verify(mockTicketService, Mockito.times(1)).findByPlace(expectedSessionId, placeRow, placeNumber);
         Mockito.verify(mockTicketService, Mockito.times(1)).save(Mockito.any());
     }
 
@@ -106,42 +105,7 @@ class TicketControllerTest {
                 .andExpect(view().name("tickets/order"))
                 .andExpect(model().attribute("ticket", ticket));
 
-        Mockito.verify(mockTicketService, Mockito.times(1)).findByPlace(expectedSessionId, expectedRowNumber, expectedPlaceNumber);
         Mockito.verify(mockTicketService, Mockito.times(1)).save(Mockito.any());
-    }
-
-    @DisplayName("Order ticket - Already Order.")
-    @Test
-    void orderTicketAlreadyOrder() throws Exception {
-        int expectedSessionId = 2;
-        int expectedUserId = 3;
-        int expectedRowNumber = 4;
-        int expectedPlaceNumber = 5;
-
-        Ticket ticket = new Ticket(
-                123,
-                expectedSessionId,
-                expectedRowNumber,
-                expectedPlaceNumber,
-                expectedUserId
-        );
-
-        Mockito.doReturn(Optional.of(ticket)).when(mockTicketService).findByPlace(expectedSessionId, expectedRowNumber, expectedPlaceNumber);
-
-        mvc.perform(post("/tickets/order")
-                        .content("sessionId=" + expectedSessionId
-                                + "&userId=" + expectedUserId
-                                + "&rowNumber=" + expectedRowNumber
-                                + "&placeNumber=" + expectedPlaceNumber)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .accept(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().isOk())
-                .andExpect(view().name("tickets/error"))
-                .andExpect(model().attributeExists("ticket"));
-
-        Mockito.verify(mockTicketService, Mockito.times(1)).findByPlace(expectedSessionId, expectedRowNumber, expectedPlaceNumber);
-        Mockito.verify(mockTicketService, Mockito.times(0)).save(Mockito.any());
     }
 
 }

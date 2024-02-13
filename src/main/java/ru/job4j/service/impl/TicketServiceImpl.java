@@ -3,6 +3,7 @@ package ru.job4j.service.impl;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
 import ru.job4j.exception.NotFoundException;
+import ru.job4j.exception.TicketPresentException;
 import ru.job4j.model.FilmSession;
 import ru.job4j.model.Hall;
 import ru.job4j.model.Ticket;
@@ -33,7 +34,12 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Ticket save(Ticket ticket) {
+    public synchronized Ticket save(Ticket ticket) {
+        Optional<Ticket> requiredTicket = findByPlace(ticket.getSessionId(), ticket.getRowNumber(), ticket.getPlaceNumber());
+        if (requiredTicket.isPresent()) {
+            throw new TicketPresentException(requiredTicket.get());
+        }
+
         return ticketRepository.save(ticket);
     }
 

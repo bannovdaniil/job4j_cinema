@@ -58,13 +58,13 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Optional<FileDto> getFileById(int id) {
-        var fileOptional = fileRepository.findById(id);
+    public FileDto getFileById(int id) {
+        Optional<File> fileOptional = fileRepository.findById(id);
         if (fileOptional.isEmpty()) {
-            return Optional.empty();
+            throw new FileException("File not found.");
         }
         var content = readFileAsBytes(fileOptional.get().getPath());
-        return Optional.of(new FileDto(fileOptional.get().getName(), content));
+        return new FileDto(fileOptional.get().getName(), content);
     }
 
     private byte[] readFileAsBytes(String path) {

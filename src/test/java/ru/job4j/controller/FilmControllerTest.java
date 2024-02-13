@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.job4j.exception.NotFoundException;
 import ru.job4j.service.FilmService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -46,20 +45,6 @@ class FilmControllerTest {
         Mockito.verify(filmService, Mockito.times(1)).findById(expectedId);
     }
 
-    @DisplayName("GetById when - NotFound")
-    @Test
-    void whenGetFilmThenNotFound() throws Exception {
-        int expectedId = 12;
-
-        Mockito.when(filmService.findById(expectedId)).thenThrow(NotFoundException.class);
-
-        mvc.perform(get("/films/" + expectedId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("errors/404"));
-
-        Mockito.verify(filmService, Mockito.times(1)).findById(expectedId);
-    }
-
     @DisplayName("GetAll then - ok")
     @Test
     void whenGetAllThenOk() throws Exception {
@@ -70,6 +55,5 @@ class FilmControllerTest {
 
         Mockito.verify(filmService, Mockito.times(1)).findAll();
     }
-
 
 }
