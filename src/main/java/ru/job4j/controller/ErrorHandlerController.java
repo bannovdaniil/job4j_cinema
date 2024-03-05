@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.ModelAndView;
 import ru.job4j.exception.FileException;
 import ru.job4j.exception.NotFoundException;
+import ru.job4j.exception.RepositoryException;
 import ru.job4j.exception.TicketPresentException;
 import ru.job4j.model.FilmSession;
 
@@ -38,7 +39,7 @@ public class ErrorHandlerController {
             IllegalArgumentException.class
     })
     public ModelAndView handleBadRequest(final Exception e) {
-        logger.error(e.getMessage());
+        logger.error(e.toString());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("errors/error");
         modelAndView.addObject("message", "Ошибка валидации данных.");
@@ -48,7 +49,7 @@ public class ErrorHandlerController {
 
     @ExceptionHandler({NotFoundException.class})
     public ModelAndView handleNotFound(final Exception e) {
-        logger.error(e.getMessage());
+        logger.error(e.toString());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("errors/error");
         modelAndView.addObject("message", "Сущность не найдена.");
@@ -58,7 +59,7 @@ public class ErrorHandlerController {
 
     @ExceptionHandler({TicketPresentException.class})
     public ModelAndView ticketPresent(final TicketPresentException e) {
-        logger.error(e.getMessage());
+        logger.error(e.toString());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("tickets/error");
         modelAndView.addObject("ticket", e.getTicket());
@@ -67,9 +68,12 @@ public class ErrorHandlerController {
     }
 
 
-    @ExceptionHandler({Exception.class})
+    @ExceptionHandler({
+            Exception.class,
+            RepositoryException.class
+    })
     public ModelAndView handleAllError(final Throwable e) {
-        logger.error(e.getMessage());
+        logger.error(e.toString());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("errors/error");
         modelAndView.addObject("message", "Непредвиденная ошибка, сообщите администратору.");

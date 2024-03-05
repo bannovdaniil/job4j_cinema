@@ -10,6 +10,7 @@ import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
 import ru.job4j.configuration.DatasourceConfiguration;
+import ru.job4j.exception.UniqueConstraintException;
 import ru.job4j.model.User;
 import ru.job4j.repository.impl.Sql2oUserRepositoryImpl;
 
@@ -71,7 +72,7 @@ class UserRepositoryTest {
 
     @DisplayName("Save and Find User by email and password Then Same")
     @Test
-    void whenSaveThenGetSame() {
+    void whenSaveThenGetSame() throws UniqueConstraintException {
         User user = sql2oUserRepository.save(new User("Egor", "name@test.ru", "password")).orElseThrow();
         Optional<User> savedUser = sql2oUserRepository.findByEmailAndPassword(user.getEmail(), user.getPassword());
         assertThat(savedUser).isPresent();
@@ -80,16 +81,20 @@ class UserRepositoryTest {
 
     @DisplayName("Save double Email then get Empty")
     @Test
-    void whenSaveDoubleEmailThenGetEmpty() {
+    void whenSaveDoubleEmailThenGetException() throws UniqueConstraintException {
         Optional<User> user1 = sql2oUserRepository.save(new User("Egor", "name@test.ru", "password"));
-        Optional<User> user2 = sql2oUserRepository.save(new User("Semen", "name@test.ru", "test"));
+        Optional<User> user2;
+        UniqueConstraintException exception = Assertions.assertThrows(
+                UniqueConstraintException.class, () ->
+                        sql2oUserRepository.save(new User("Semen", "name@test.ru", "test"))
+        );
+
         assertThat(user1).isPresent();
-        assertThat(user2).isEmpty();
     }
 
     @DisplayName("Find User by email and Wrong password Then Emptu")
     @Test
-    void findByEmailAndWrongPasswordThenError() {
+    void findByEmailAndWrongPasswordThenError() throws UniqueConstraintException {
         User user = sql2oUserRepository.save(new User("Egor", "name@test.ru", "password")).orElseThrow();
         Optional<User> findUser = sql2oUserRepository.findByEmailAndPassword(user.getEmail(), "bad password");
         assertThat(findUser).isEmpty();
@@ -97,7 +102,7 @@ class UserRepositoryTest {
 
     @DisplayName("Find User by Wrong email and password Then Emptu")
     @Test
-    void findByWrongEmailAndPasswordThenError() {
+    void findByWrongEmailAndPasswordThenError() throws UniqueConstraintException {
         User user = sql2oUserRepository.save(new User("Egor", "name@test.ru", "password")).orElseThrow();
         Optional<User> findUser = sql2oUserRepository.findByEmailAndPassword("wrong@user.ru", user.getPassword());
         assertThat(findUser).isEmpty();

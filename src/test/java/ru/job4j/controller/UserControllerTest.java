@@ -145,10 +145,8 @@ class UserControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .accept(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().isOk())
-                .andExpect(view().name("users/login"))
-                .andExpect(model().attributeExists("user"))
-                .andExpect(model().attributeExists("user"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/users/login"));
 
         Mockito.verify(userService, Mockito.times(1)).save(Mockito.any());
     }

@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.job4j.exception.NotFoundException;
+import ru.job4j.exception.TicketPresentException;
 import ru.job4j.model.FilmSession;
 import ru.job4j.model.Hall;
 import ru.job4j.model.Ticket;
@@ -40,7 +41,7 @@ class TicketServiceTest {
 
     @DisplayName("save then TicketRepository.save")
     @Test
-    void save() {
+    void save() throws TicketPresentException {
         Ticket expectedTicket = new Ticket(
                 10,
                 23,

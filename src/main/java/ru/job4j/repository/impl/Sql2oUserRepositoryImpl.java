@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
+import org.sql2o.Sql2oException;
+import ru.job4j.exception.RepositoryException;
+import ru.job4j.exception.UniqueConstraintException;
 import ru.job4j.model.User;
 import ru.job4j.repository.UserRepository;
 
@@ -24,7 +27,7 @@ public class Sql2oUserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> save(User user) {
+    public Optional<User> save(User user) throws UniqueConstraintException {
         try (Connection connection = sql2o.open()) {
             String sql = """
                     INSERT INTO users(full_name, email, password)
@@ -37,6 +40,11 @@ public class Sql2oUserRepositoryImpl implements UserRepository {
             int generatedId = query.executeUpdate().getKey(Integer.class);
             user.setId(generatedId);
             return Optional.of(user);
+        } catch (Sql2oException e) {
+            if (e.getMessage().contains("Unique")) {
+                throw new UniqueConstraintException(e);
+            }
+            throw new RepositoryException(e);
         } catch (Exception e) {
             log.error("User save error: {}", e.getMessage());
         }

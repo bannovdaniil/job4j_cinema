@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.job4j.exception.TicketPresentException;
 import ru.job4j.model.Ticket;
 import ru.job4j.service.TicketService;
 
@@ -26,7 +27,7 @@ public class TicketController {
     @PostMapping("/order")
     public String orderTicket(@ModelAttribute Ticket ticket,
                               @RequestParam(value = "placeBox", defaultValue = "x") String placeBox,
-                              Model model) {
+                              Model model) throws TicketPresentException {
         if (!"x".equals(placeBox) && placeBox.matches("^\\d+-\\d+$")) {
             String[] places = placeBox.split("-");
             ticket.setRowNumber(Integer.parseInt(places[0]));

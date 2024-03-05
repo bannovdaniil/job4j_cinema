@@ -2,7 +2,7 @@ package ru.job4j.exception;
 
 import ru.job4j.model.Ticket;
 
-public class TicketPresentException extends RuntimeException {
+public class TicketPresentException extends Exception {
     private final transient Ticket ticket;
 
     public TicketPresentException(Ticket ticket) {

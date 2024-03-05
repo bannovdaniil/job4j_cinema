@@ -34,7 +34,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public synchronized Ticket save(Ticket ticket) {
+    public synchronized Ticket save(Ticket ticket) throws TicketPresentException {
         Optional<Ticket> requiredTicket = findByPlace(ticket.getSessionId(), ticket.getRowNumber(), ticket.getPlaceNumber());
         if (requiredTicket.isPresent()) {
             throw new TicketPresentException(requiredTicket.get());

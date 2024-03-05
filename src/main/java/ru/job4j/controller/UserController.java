@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.job4j.exception.UniqueConstraintException;
 import ru.job4j.model.User;
 import ru.job4j.service.UserService;
 
@@ -59,11 +60,19 @@ public class UserController {
 
     @PostMapping("/register")
     public String register(@ModelAttribute User user, Model model) {
-        Optional<User> savedUser = userService.save(user);
-        if (savedUser.isEmpty()) {
-            model.addAttribute("error", "Пользователь с такой почтой уже существует");
+        Optional<User> savedUser;
+
+        try {
+            savedUser = userService.save(user);
+            model.addAttribute("userLogged", savedUser.get());
+        } catch (UniqueConstraintException e) {
+            model.addAttribute("error", "Пользователь с таким Email уже существует.");
+            return "users/register";
+        } catch (Exception e) {
+            model.addAttribute("error", "Не удалось создать пользователя.");
             return "users/register";
         }
-        return "users/login";
+
+        return "redirect:/users/login";
     }
 }

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.job4j.exception.UniqueConstraintException;
 import ru.job4j.model.User;
 import ru.job4j.repository.UserRepository;
 import ru.job4j.service.impl.UserServiceImpl;
@@ -27,7 +28,7 @@ class UserServiceTest {
 
     @DisplayName("Save then call one UserRepository save")
     @Test
-    void save() {
+    void save() throws UniqueConstraintException {
         User user = new User(
                 "test full name",
                 "e@mail.ru",

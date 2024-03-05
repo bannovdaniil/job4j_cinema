@@ -2,6 +2,7 @@ package ru.job4j.service.impl;
 
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
+import ru.job4j.exception.UniqueConstraintException;
 import ru.job4j.model.User;
 import ru.job4j.repository.UserRepository;
 import ru.job4j.service.UserService;
@@ -21,7 +22,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> save(User user) {
+    public Optional<User> save(User user) throws UniqueConstraintException {
         return userRepository.save(user);
     }
 
